@@ -20,6 +20,8 @@ class AppController extends GetxController {
         imageUrl: userCredential.user!.photoURL,
       );
       print(currentUser.toString());
+      Get.offAllNamed('/home');
+      StorageHelper.markFirstTime();
     } else {
       //TODO:
     }
@@ -67,8 +69,7 @@ class AppController extends GetxController {
   void handleSignIn() async {
     if (!StorageHelper.isFirstTime()) {
       print('not first Time');
-      // await signIn();
-      Get.offAllNamed('/home');
+      await signIn();
     } else {
       print(' first Time');
 
@@ -79,6 +80,5 @@ class AppController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    handleSignIn();
   }
 }

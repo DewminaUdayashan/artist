@@ -1,12 +1,14 @@
+import 'package:artist/controllers/app_controller.dart';
 import 'package:artist/screens/signin/setup_account.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // CONSTANTS
 import 'package:artist/shared/text.dart';
 
-class Signin extends StatelessWidget {
+class Signin extends GetWidget<AppController> {
   const Signin({Key? key}) : super(key: key);
 
   @override
@@ -59,8 +61,7 @@ class Signin extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(30),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SetupAccount()));
+                  controller.signIn();
                 },
                 child: Ink(
                   decoration: BoxDecoration(
