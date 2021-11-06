@@ -10,6 +10,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'screens/signin/setup_account.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
             binding: InitialBindings()),
         GetPage(name: '/home', page: () => const Home()),
         GetPage(name: '/signIn', page: () => const Signin()),
+        GetPage(name: '/setup', page: () => const SetupAccount()),
       ],
       theme: lightThemeData,
       initialRoute: '/splash',
