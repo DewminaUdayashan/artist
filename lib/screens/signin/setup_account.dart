@@ -1,5 +1,6 @@
 import 'package:artist/screens/home/home.dart';
 import 'package:artist/shared/colors.dart';
+import 'package:artist/shared/instances.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
@@ -69,6 +70,9 @@ class _SetupAccountState extends State<SetupAccount> {
                     duration: const Duration(milliseconds: 1500),
                     child: GestureDetector(
                       onTap: () {
+                        if (appController.currentUser != null) {
+                          appController.currentUser!.mainPurpose = '1';
+                        }
                         setState(() {
                           selectedChoise = 'find';
                         });
@@ -87,6 +91,9 @@ class _SetupAccountState extends State<SetupAccount> {
                     duration: const Duration(milliseconds: 1500),
                     child: GestureDetector(
                       onTap: () {
+                        if (appController.currentUser != null) {
+                          appController.currentUser!.mainPurpose = '2';
+                        }
                         setState(() {
                           selectedChoise = 'new';
                         });
@@ -109,7 +116,7 @@ class _SetupAccountState extends State<SetupAccount> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(30),
                   onTap: () {
-                    Navigator.of(context).pushReplacementNamed('/home');
+                    appController.markAppOpened();
                   },
                   child: Ink(
                     decoration: BoxDecoration(

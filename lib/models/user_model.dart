@@ -29,7 +29,7 @@ class UserModel {
     this.imageUrl,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
@@ -45,7 +45,7 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'] != null ? map['id'] : null,
       name: map['name'] != null ? map['name'] : null,
@@ -62,11 +62,6 @@ class UserModel {
           : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
 
   @override
   String toString() {

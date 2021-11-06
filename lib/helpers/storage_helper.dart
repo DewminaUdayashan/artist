@@ -4,11 +4,21 @@ class StorageHelper {
   static final GetStorage storage = GetStorage();
 
   static bool isFirstTime() {
-    return storage.read<bool>(firstTimeKey) ?? true;
+    final val = storage.read<bool>(firstTimeKey);
+    print(val);
+    if (val == null) {
+      return true;
+    } else if (val is bool) {
+      return val;
+    } else {
+      print(val);
+      return true;
+    }
   }
 
   static void markFirstTime() {
-    storage.write(firstTimeKey, true);
+    print('User Marked');
+    storage.write(firstTimeKey, false);
   }
 }
 
