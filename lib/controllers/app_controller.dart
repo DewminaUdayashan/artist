@@ -20,8 +20,7 @@ class AppController extends GetxController {
         imageUrl: userCredential.user!.photoURL,
       );
       print(currentUser.toString());
-      Get.offAllNamed('/home');
-      StorageHelper.markFirstTime();
+      Get.offAllNamed('/setup');
     } else {
       //TODO:
     }

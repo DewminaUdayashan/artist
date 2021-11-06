@@ -18,11 +18,11 @@ class TopCarousel extends StatelessWidget {
           builder: (BuildContext context) {
             return Container(
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: BoxDecoration(color: Colors.amber),
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                decoration: const BoxDecoration(color: Colors.amber),
                 child: Text(
                   'text $i',
-                  style: TextStyle(fontSize: 16.0),
+                  style: const TextStyle(fontSize: 16.0),
                 ));
           },
         );
