@@ -7,31 +7,31 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Welcome back!', style: context.textTheme.bodyText2),
-              Row(
-                children: <Widget>[
-                  Text('Helena Angel ', style: context.textTheme.headline2),
-                  Lottie.asset('assets/json/hand.json', width: 30),
-                ],
-              ),
-            ],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Welcome back!', style: context.textTheme.bodyText2),
+            Row(
+              children: <Widget>[
+                Text('Helena Angel ', style: context.textTheme.headline2),
+                Lottie.asset('assets/json/hand.json', width: 30),
+              ],
+            ),
+          ],
+        ),
+        const Spacer(),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.notifications_none_outlined,
+            size: 30,
           ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_none_outlined),
-            splashRadius: 20,
-          ),
-        ],
-      ),
+          splashRadius: 20,
+        ),
+      ],
     );
   }
 }
