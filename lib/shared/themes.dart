@@ -25,6 +25,14 @@ TextTheme lightTextTheme = ThemeData.light().textTheme.copyWith(
               fontWeight: FontWeight.w200,
             ),
           ),
+      headline3: ThemeData.light().textTheme.headline3!.merge(
+            GoogleFonts.aBeeZee(
+              color: Colors.black87,
+              letterSpacing: .5,
+              fontSize: 17,
+              fontWeight: FontWeight.w200,
+            ),
+          ),
       bodyText1: ThemeData.light().textTheme.bodyText1!.merge(
             GoogleFonts.aBeeZee(
               color: Colors.black54,

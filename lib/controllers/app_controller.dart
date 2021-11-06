@@ -1,3 +1,4 @@
+import 'package:artist/helpers/firestore_helper.dart';
 import 'package:artist/helpers/signin_helper.dart';
 import 'package:artist/helpers/storage_helper.dart';
 import 'package:artist/models/user_model.dart';
@@ -9,6 +10,7 @@ class AppController extends GetxController {
   final PageController pageController = PageController();
   RxInt selectedPage = 0.obs;
 
+  UserModel? tempUser;
   UserModel? currentUser;
 
   Future<void> signIn() async {
@@ -20,7 +22,12 @@ class AppController extends GetxController {
         imageUrl: userCredential.user!.photoURL,
       );
       print(currentUser.toString());
-      Get.offAllNamed('/setup');
+      if (StorageHelper.isFirstTime()) {
+        Get.offAllNamed('/setup');
+      } else {
+        FirestoreHelper.registerUser(currentUser!);
+        Get.offAllNamed('/home');
+      }
     } else {
       //TODO:
     }
@@ -47,9 +54,19 @@ class AppController extends GetxController {
     showCupertinoModalPopup(
       context: Get.context!,
       builder: (context) => CupertinoActionSheet(
+        cancelButton: CupertinoActionSheetAction(
+          isDestructiveAction: true,
+          onPressed: () {},
+          child: const Text(
+            'Cancel',
+          ),
+        ),
         actions: [
           CupertinoActionSheetAction(
-            onPressed: () {},
+            onPressed: () {
+              tempUser = currentUser;
+              Get.toNamed('/editAccount');
+            },
             child: const Text(
               'Edit Account',
             ),
@@ -74,6 +91,12 @@ class AppController extends GetxController {
 
       Get.offAllNamed('/signIn');
     }
+  }
+
+  void markAppOpened() {
+    StorageHelper.markFirstTime();
+    FirestoreHelper.registerUser(currentUser!);
+    Get.offAllNamed('/home');
   }
 
   @override

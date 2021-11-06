@@ -1,7 +1,9 @@
+import 'package:artist/controllers/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 
-class ProfilePicture extends StatelessWidget {
+class ProfilePicture extends GetWidget<AppController> {
   const ProfilePicture({
     Key? key,
   }) : super(key: key);
@@ -21,8 +23,13 @@ class ProfilePicture extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child: Image.network(
-            'https://modernpaintbynumbers.com/wp-content/uploads/2020/10/Megan-Ramsey-paint-by-number.jpg',
+          child: OctoImage(
+            image: NetworkImage(controller.currentUser!.imageUrl!),
+            placeholderBuilder: (context) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            errorBuilder: (context, error, stackTrace) =>
+                const Text('Unable to load'), //TODO
             fit: BoxFit.cover,
           ),
         ),

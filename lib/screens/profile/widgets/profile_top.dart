@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:artist/controllers/app_controller.dart';
+import 'package:artist/shared/instances.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,7 @@ class ProfileTop extends GetWidget<AppController> {
               ),
             ),
             Text(
-              'Natheli Emmanuel',
+              appController.currentUser!.name!,
               style: GoogleFonts.montserrat(
                 color: Colors.white,
                 fontSize: 40,
@@ -44,18 +45,12 @@ class ProfileTop extends GetWidget<AppController> {
                 isRepeatingAnimation: true,
                 displayFullTextOnTap: true,
                 animatedTexts: [
-                  TypewriterAnimatedText(
-                    'Artist',
-                    speed: const Duration(milliseconds: 100),
-                  ),
-                  TypewriterAnimatedText(
-                    'Actor',
-                    speed: const Duration(milliseconds: 100),
-                  ),
-                  TypewriterAnimatedText(
-                    'Director',
-                    speed: const Duration(milliseconds: 100),
-                  ),
+                  if (appController.currentUser!.categoriesId == null) ...[
+                    TypewriterAnimatedText(
+                      'No details to show',
+                      speed: const Duration(milliseconds: 100),
+                    ),
+                  ],
                 ],
               ),
             ),
