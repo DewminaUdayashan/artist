@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "134565081106",
+    "project_id": "artist-testing",
+    "storage_bucket": "artist-testing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134565081106:android:13b22c69b0f168b2f828cb",
+        "android_client_info": {
+          "package_name": "lk.youth.artist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134565081106-8tsajvav28bno426rnpiggfckt31mk94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lk.youth.artist",
+            "certificate_hash": "ac1dda95460672577b2cd36dbdbc030ad038148e"
+          }
+        },
+        {
+          "client_id": "134565081106-g5a69im1eenrn52p10tp8pj6ocislp57.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqHJWaTwCrFQyX8a-ti6dUAEFdPz0hAwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134565081106-g5a69im1eenrn52p10tp8pj6ocislp57.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
