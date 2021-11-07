@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:artist/controllers/app_controller.dart';
+import 'package:artist/models/user_model.dart';
 import 'package:artist/shared/instances.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 class ProfileTop extends GetWidget<AppController> {
   const ProfileTop({
     Key? key,
+    this.user,
   }) : super(key: key);
+  final UserModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,9 @@ class ProfileTop extends GetWidget<AppController> {
                 init: AppController(),
                 builder: (controller) {
                   return Text(
-                    controller.currentUser.value.name!,
+                    user != null
+                        ? user!.name!
+                        : controller.currentUser.value.name!,
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: 40,

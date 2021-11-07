@@ -1,4 +1,5 @@
 import 'package:artist/controllers/app_controller.dart';
+import 'package:artist/models/user_model.dart';
 import 'package:artist/screens/profile/widgets/profile_body.dart';
 import 'package:artist/screens/profile/widgets/profile_picture.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,10 +12,9 @@ import 'widgets/animated_bg.dart';
 import 'widgets/profile_top.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key, this.isViewer = true}) : super(key: key);
+  const Profile({Key? key, this.user}) : super(key: key);
 
-  final bool isViewer;
-
+  final UserModel? user;
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -33,7 +33,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             color: const Color(0xff35B7F1),
           ),
           const AnimatedBg(),
-          const ProfileTop(),
+          ProfileTop(
+            user: widget.user,
+          ),
           SingleChildScrollView(
             child: Stack(
               children: [
@@ -47,14 +49,24 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                           children: [
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.crop_square_rounded,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
+                                widget.user != null
+                                    ? IconButton(
+                                        onPressed: () => Get.back(),
+                                        icon: const Icon(
+                                          CupertinoIcons.back,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Icon(
+                                        Icons.crop_square_rounded,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
                                 const Spacer(),
                                 Text(
-                                  'My Profile',
+                                  widget.user != null
+                                      ? 'Profile'
+                                      : 'My Profile',
                                   style: GoogleFonts.montserrat(
                                     color: Colors.white,
                                     fontSize: 25,
@@ -89,13 +101,51 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                         vertical: 70,
                         horizontal: 16,
                       ),
-                      child: const ProfileBody(
-                        isViewer: true,
-                      ),
+                      child: ProfileBody(user: widget.user),
                     ),
                   ],
                 ),
-                const ProfilePicture(),
+                ProfilePicture(
+                  user: widget.user,
+                ),
+                if (widget.user != null) ...[
+                  Positioned(
+                    top: Get.height / 2.1,
+                    right: 30,
+                    child: Row(children: [
+                      IconButton(
+                        tooltip: 'Make a Call',
+                        icon: const Icon(
+                          CupertinoIcons.phone_circle_fill,
+                          color: Colors.green,
+                          size: 36,
+                        ),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        tooltip: 'Email',
+                        icon: const Icon(
+                          CupertinoIcons.mail_solid,
+                          color: Colors.red,
+                          size: 36,
+                        ),
+                        onPressed: () {},
+                      )
+                    ]),
+                  )
+                ] else ...[
+                  Positioned(
+                    top: Get.height / 2.1,
+                    right: 30,
+                    child: TextButton.icon(
+                      onPressed: () {},
+                      icon:
+                          const Icon(CupertinoIcons.create, color: Colors.blue),
+                      label: const Text('Create'),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

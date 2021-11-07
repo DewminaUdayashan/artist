@@ -1,4 +1,5 @@
 import 'package:artist/models/user_model.dart';
+import 'package:artist/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
@@ -54,7 +55,9 @@ class SearchItem extends StatelessWidget {
           ),
           IconButton(
             splashRadius: 10,
-            onPressed: () {},
+            onPressed: () {
+              Get.to(SafeArea(child: Profile(user: user)));
+            },
             icon: const Icon(
               Icons.more_vert_rounded,
             ),

@@ -1,4 +1,5 @@
 import 'package:artist/controllers/app_controller.dart';
+import 'package:artist/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
@@ -6,7 +7,10 @@ import 'package:octo_image/octo_image.dart';
 class ProfilePicture extends GetWidget<AppController> {
   const ProfilePicture({
     Key? key,
+    this.user,
   }) : super(key: key);
+
+  final UserModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,9 @@ class ProfilePicture extends GetWidget<AppController> {
               init: AppController(),
               builder: (context) {
                 return OctoImage(
-                  image: NetworkImage(controller.currentUser.value.imageUrl!),
+                  image: NetworkImage(user != null
+                      ? user!.imageUrl!
+                      : controller.currentUser.value.imageUrl!),
                   placeholderBuilder: (context) => const Center(
                     child: CircularProgressIndicator(),
                   ),
