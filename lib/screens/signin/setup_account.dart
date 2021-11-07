@@ -71,7 +71,7 @@ class _SetupAccountState extends State<SetupAccount> {
                     child: GestureDetector(
                       onTap: () {
                         if (appController.currentUser != null) {
-                          appController.currentUser!.mainPurpose = '1';
+                          appController.currentUser.value.mainPurpose = '1';
                         }
                         setState(() {
                           selectedChoise = 'find';
@@ -92,7 +92,7 @@ class _SetupAccountState extends State<SetupAccount> {
                     child: GestureDetector(
                       onTap: () {
                         if (appController.currentUser != null) {
-                          appController.currentUser!.mainPurpose = '2';
+                          appController.currentUser.value.mainPurpose = '2';
                         }
                         setState(() {
                           selectedChoise = 'new';

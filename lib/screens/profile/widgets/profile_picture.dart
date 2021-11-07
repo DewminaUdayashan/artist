@@ -23,15 +23,19 @@ class ProfilePicture extends GetWidget<AppController> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child: OctoImage(
-            image: NetworkImage(controller.currentUser!.imageUrl!),
-            placeholderBuilder: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            errorBuilder: (context, error, stackTrace) =>
-                const Text('Unable to load'), //TODO
-            fit: BoxFit.cover,
-          ),
+          child: GetBuilder<AppController>(
+              init: AppController(),
+              builder: (context) {
+                return OctoImage(
+                  image: NetworkImage(controller.currentUser.value.imageUrl!),
+                  placeholderBuilder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text('Unable to load'), //TODO
+                  fit: BoxFit.cover,
+                );
+              }),
         ),
       ),
     );

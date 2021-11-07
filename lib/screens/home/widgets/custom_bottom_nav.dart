@@ -28,8 +28,8 @@ class CustomBottomNav extends GetWidget<AppController> {
               onPressed: () => controller.onTabTapped(1),
               icon: Icon(
                 controller.selectedPage.value == 1
-                    ? CupertinoIcons.chat_bubble_text_fill
-                    : CupertinoIcons.chat_bubble_text,
+                    ? Icons.person_search_rounded
+                    : Icons.person_search_outlined,
                 color: controller.selectedPage.value == 1
                     ? Colors.blue
                     : Colors.grey,
@@ -39,8 +39,8 @@ class CustomBottomNav extends GetWidget<AppController> {
               onPressed: () => controller.onTabTapped(2),
               icon: Icon(
                 controller.selectedPage.value == 2
-                    ? CupertinoIcons.bell_fill
-                    : CupertinoIcons.bell,
+                    ? CupertinoIcons.chat_bubble_text_fill
+                    : CupertinoIcons.chat_bubble_text,
                 color: controller.selectedPage.value == 2
                     ? Colors.blue
                     : Colors.grey,

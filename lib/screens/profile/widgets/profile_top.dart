@@ -27,14 +27,18 @@ class ProfileTop extends GetWidget<AppController> {
                 fontSize: 18,
               ),
             ),
-            Text(
-              appController.currentUser!.name!,
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            GetBuilder<AppController>(
+                init: AppController(),
+                builder: (controller) {
+                  return Text(
+                    controller.currentUser.value.name!,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }),
             DefaultTextStyle(
               style: GoogleFonts.ubuntu(
                 color: Colors.white,
@@ -45,7 +49,7 @@ class ProfileTop extends GetWidget<AppController> {
                 isRepeatingAnimation: true,
                 displayFullTextOnTap: true,
                 animatedTexts: [
-                  if (appController.currentUser!.categoriesId == null) ...[
+                  if (appController.currentUser.value.categoriesId == null) ...[
                     TypewriterAnimatedText(
                       'No details to show',
                       speed: const Duration(milliseconds: 100),

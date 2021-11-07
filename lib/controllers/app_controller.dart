@@ -11,22 +11,21 @@ class AppController extends GetxController {
   RxInt selectedPage = 0.obs;
 
   UserModel? tempUser;
-  UserModel? currentUser;
+  Rx<UserModel> currentUser = UserModel().obs;
 
   Future<void> signIn() async {
     UserCredential userCredential = await SignInHelper.signInWithGoogle();
     if (userCredential.user != null) {
-      currentUser = UserModel(
-        email: userCredential.user!.email,
-        name: userCredential.user!.displayName,
-        imageUrl: userCredential.user!.photoURL,
-        mainPurpose: '1',
-      );
+      currentUser.value.email = userCredential.user!.email;
+      currentUser.value.name = userCredential.user!.displayName;
+      currentUser.value.imageUrl = userCredential.user!.photoURL;
+      currentUser.value.mainPurpose = '1';
+      currentUser.value.joinedDate = DateTime.now().toString();
       print(currentUser.toString());
       if (StorageHelper.isFirstTime()) {
         Get.offAllNamed('/setup');
       } else {
-        FirestoreHelper.registerUser(currentUser!);
+        FirestoreHelper.registerUser(currentUser.value);
         Get.offAllNamed('/home');
       }
     } else {
@@ -65,7 +64,7 @@ class AppController extends GetxController {
         actions: [
           CupertinoActionSheetAction(
             onPressed: () {
-              tempUser = currentUser;
+              tempUser = currentUser.value;
               Get.toNamed('/editAccount');
             },
             child: const Text(
@@ -96,7 +95,7 @@ class AppController extends GetxController {
 
   void markAppOpened() {
     StorageHelper.markFirstTime();
-    FirestoreHelper.registerUser(currentUser!);
+    FirestoreHelper.registerUser(currentUser.value);
     Get.offAllNamed('/home');
   }
 
