@@ -1,8 +1,11 @@
+import 'package:artist/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 
 class SearchItem extends StatelessWidget {
-  const SearchItem({Key? key}) : super(key: key);
+  const SearchItem({Key? key, this.user}) : super(key: key);
+  final UserModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +22,16 @@ class SearchItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
-              'assets/images/user.jpg',
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
-            ),
+            child: user == null
+                ? Image.asset(
+                    'assets/images/user.jpg',
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                  )
+                : OctoImage(
+                    image: NetworkImage(user!.imageUrl!),
+                  ),
           ),
           const SizedBox(width: 10.0),
           Expanded(
@@ -33,7 +40,7 @@ class SearchItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Randhika Chathuranga',
+                  user == null ? 'Randhika Chathuranga' : user!.name!,
                   style: context.textTheme.headline2!
                       .copyWith(color: Colors.black54),
                 ),
@@ -56,4 +63,4 @@ class SearchItem extends StatelessWidget {
       ),
     );
   }
-}
+}//

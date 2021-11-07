@@ -41,15 +41,15 @@ class EditAccount extends GetWidget<AppController> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: GetBuilder<EditAccountController>(
-            init: EditAccountController(),
-            builder: (controllerr) {
-              return editAccountController.isSaving
-                  ? const Center(
-                      child: CupertinoActivityIndicator(),
-                    )
-                  : Padding(
+      body: GetBuilder<EditAccountController>(
+          init: EditAccountController(),
+          builder: (controllerr) {
+            return controllerr.isSaving
+                ? const Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : SingleChildScrollView(
+                    child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
@@ -68,11 +68,15 @@ class EditAccount extends GetWidget<AppController> {
                                               controller.tempUser!.imageUrl!),
                                           maxRadius: Get.width / 6,
                                         )
-                                      : CircleAvatar(
-                                          backgroundImage:
-                                              FileImage(controllerr.file!),
-                                          maxRadius: Get.width / 6,
-                                        ),
+                                      : GetBuilder<EditAccountController>(
+                                          init: EditAccountController(),
+                                          builder: (controller) {
+                                            return CircleAvatar(
+                                              backgroundImage:
+                                                  FileImage(controller.file!),
+                                              maxRadius: Get.width / 6,
+                                            );
+                                          }),
                                   Positioned(
                                     top: 0,
                                     right: 0,
@@ -129,11 +133,26 @@ class EditAccount extends GetWidget<AppController> {
                                   FloatingLabelBehavior.always,
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            readOnly: true,
+                            controller: editAccountController.dobController,
+                            style: context.textTheme.headline3,
+                            onTap: () {
+                              editAccountController.showDatePicker(context);
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Birth day',
+                              labelStyle: context.textTheme.bodyText1,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                            ),
+                          ),
                         ],
                       ),
-                    );
-            }),
-      ),
+                    ),
+                  );
+          }),
     );
   }
 }
