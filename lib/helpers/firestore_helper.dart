@@ -19,8 +19,9 @@ class FirestoreHelper {
             .catchError((err) => print(err));
       } else {
         appController.currentUser = snapshot.docs.first.data() as UserModel;
+        appController.currentUser!.id = snapshot.docs.first.id;
         print('User Exist');
-        print(snapshot.docs.first.data());
+        print(appController.currentUser.toString());
       }
     });
   }

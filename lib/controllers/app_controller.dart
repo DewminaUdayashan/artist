@@ -20,6 +20,7 @@ class AppController extends GetxController {
         email: userCredential.user!.email,
         name: userCredential.user!.displayName,
         imageUrl: userCredential.user!.photoURL,
+        mainPurpose: '1',
       );
       print(currentUser.toString());
       if (StorageHelper.isFirstTime()) {
