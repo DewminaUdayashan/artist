@@ -11,7 +11,6 @@ class FirebaseStorageHelper {
       firebase_storage.FirebaseStorage.instance;
 
   static Future<void> uploadFile(File file) async {
-    String _url = appController.currentUser.value.imageUrl ?? '';
     firebase_storage.Reference reference = firebase_storage
         .FirebaseStorage.instance
         .ref()
@@ -24,9 +23,34 @@ class FirebaseStorageHelper {
         await task.whenComplete(() => null);
     snapshot.ref.getDownloadURL().then((uri) {
       print('url ==========================================================');
-      _url = uri;
       appController.currentUser.value.imageUrl = uri;
       FirestoreHelper.updatedUserImageUrl(uri);
     });
+  }
+
+  static Future<void> uploadPost(List<File?> files) async {
+    for (File? file in files) {
+      firebase_storage.Reference reference = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('uploads')
+          .child('/posts')
+          .child(appController.currentUser.value.id!)
+          .child(DateTime.now().toString())
+          .child(file!.path.split('.').last);
+      firebase_storage.UploadTask task = reference.putFile(file);
+      task.snapshotEvents.listen((snapshot) {
+        appController.bytesTrassferd.value =
+            ((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                .toString();
+        print(appController.bytesTrassferd.value);
+      });
+      firebase_storage.TaskSnapshot snapshot =
+          await task.whenComplete(() => null);
+      snapshot.ref.getDownloadURL().then((uri) {
+        appController.currentPost.mediaUrls!.add(uri);
+      });
+    }
+    print('///////////////////////////////done');
   }
 }

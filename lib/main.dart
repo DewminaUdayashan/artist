@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:artist/bindings/create_post_binding.dart';
 import 'package:artist/bindings/edit_account_bindings.dart';
+import 'package:artist/screens/create_post/create_post.dart';
 import 'package:artist/screens/home/home.dart';
 import 'package:artist/screens/profile/edit_account.dart';
 import 'package:artist/screens/signin/signin.dart';
 import 'package:artist/bindings/bindings.dart';
+import 'package:artist/screens/splash/splash.dart';
 import 'package:artist/shared/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -47,6 +50,12 @@ class MyApp extends StatelessWidget {
           name: '/editAccount',
           page: () => const EditAccount(),
           binding: EditAccountBindings(),
+        ),
+        GetPage(
+          name: '/createPost',
+          page: () => const CreatePost(),
+          transition: Transition.cupertinoDialog,
+          binding: CreatePostBinding(),
         ),
       ],
       theme: lightThemeData,

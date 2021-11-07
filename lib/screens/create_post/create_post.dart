@@ -1,17 +1,12 @@
-import 'package:artist/screens/create_post/widgets/post_item.dart';
+import 'package:artist/controllers/create_post_controller.dart';
+import 'package:artist/shared/instances.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 
-class CreatePost extends StatelessWidget {
+class CreatePost extends GetWidget<CreatePostController> {
   const CreatePost({Key? key}) : super(key: key);
-
-  static final imageList = [
-    'assets/images/image_1.jpg',
-    'assets/images/image_2.jpg',
-    'assets/images/image_3.jpg',
-    'assets/images/image_4.jpg',
-    'assets/images/image_5.jpg',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +23,9 @@ class CreatePost extends StatelessWidget {
               Icons.send,
               color: Colors.black54,
             ),
-            onPressed: () => Get.back(),
+            onPressed: () {
+              controller.makePost();
+            },
           ),
         ],
         leading: IconButton(
@@ -43,43 +40,178 @@ class CreatePost extends StatelessWidget {
         title: Text('Create Post', style: context.textTheme.headline2),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage('assets/images/user.jpg'),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    OctoImage(
+                      height: 50,
+                      width: 50,
+                      image: NetworkImage(
+                        appController.currentUser.value.imageUrl!,
+                      ),
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(
+                            Icons.error,
+                            color: Colors.grey,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 15),
+                    Text(
+                      appController.currentUser.value.name!,
+                      style: context.textTheme.bodyText1,
+                    ),
+                    const Spacer(),
+                    TextButton.icon(
+                      onPressed: () => controller.addMedia(),
+                      icon: const Icon(Icons.add_a_photo_rounded),
+                      label: const Text('Media'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Say something about this photo ...',
+                    border: InputBorder.none,
                   ),
-                  const SizedBox(width: 15),
-                  Text('Nuwan Randhika', style: context.textTheme.bodyText1)
-                ],
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Say something about this photo ...',
-                  border: InputBorder.none,
+                  style: context.textTheme.bodyText1,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
                 ),
-                style: context.textTheme.bodyText1,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-              ),
-              const SizedBox(height: 15),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: imageList.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return PostItem(
-                      image: imageList[index],
-                    );
-                  },
-                ),
-              ),
-            ],
+                const SizedBox(height: 15),
+                GetBuilder<CreatePostController>(
+                    init: CreatePostController(),
+                    builder: (context) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.pickedFiles.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Stack(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Image.file(
+                                        controller.pickedFiles[index].isVideo
+                                            ? controller
+                                                .pickedFiles[index].thumb!
+                                            : controller
+                                                .pickedFiles[index].file!,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
+                                    if (controller
+                                        .pickedFiles[index].isVideo) ...[
+                                      Obx(
+                                        () => Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          left: 0,
+                                          bottom: 0,
+                                          child:
+                                              !controller.videoProcessing.value
+                                                  ? const Icon(
+                                                      Icons
+                                                          .play_circle_fill_rounded,
+                                                      color: Colors.black,
+                                                      size: 50,
+                                                    )
+                                                  : Text(
+                                                      'Video processing : ${controller.compressProgress.toStringAsFixed(2)}%',
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  left: 5,
+                                  right: 5,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      if (!controller
+                                          .pickedFiles[index].isVideo)
+                                        TextButton(
+                                          onPressed: () =>
+                                              controller.cropImage(index),
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.black.withOpacity(.5),
+                                          ),
+                                          child: Row(
+                                            children: const [
+                                              Icon(
+                                                CupertinoIcons.crop_rotate,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                              SizedBox(width: 6),
+                                              Text(
+                                                'Crop',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      const Spacer(),
+                                      Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () {
+                                            controller.removeMedia(index);
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: Ink(
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: const Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }),
+              ],
+            ),
           ),
         ),
       ),

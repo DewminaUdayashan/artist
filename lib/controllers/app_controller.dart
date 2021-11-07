@@ -1,10 +1,16 @@
+import 'dart:io';
+
+import 'package:artist/helpers/firebase_storage_helper.dart';
 import 'package:artist/helpers/firestore_helper.dart';
 import 'package:artist/helpers/signin_helper.dart';
 import 'package:artist/helpers/storage_helper.dart';
+import 'package:artist/models/post_model.dart';
 import 'package:artist/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
+import 'create_post_controller.dart';
 
 class AppController extends GetxController {
   final PageController pageController = PageController();
@@ -97,6 +103,15 @@ class AppController extends GetxController {
     StorageHelper.markFirstTime();
     FirestoreHelper.registerUser(currentUser.value);
     Get.offAllNamed('/home');
+  }
+
+  PostModel currentPost = PostModel();
+  RxString bytesTrassferd = ''.obs;
+  void handlePost(List<PickedMedia> files, String description) {
+    FirebaseStorageHelper.uploadPost(files.map((e) => e.file).toList());
+    currentPost.date = DateTime.now().toString();
+    currentPost.description = description;
+    currentPost.mediaUrls = List<String>.empty(growable: true);
   }
 
   @override
