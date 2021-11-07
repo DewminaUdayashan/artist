@@ -4,6 +4,8 @@ import 'package:artist/screens/home_page/widgets/top_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'widgets/post_item.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -20,12 +22,29 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  children: const <Widget>[
-                    TopBar(),
-                    SizedBox(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const TopBar(),
+                    const SizedBox(
                       height: 90,
                     ),
                     TopCarousel(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Text(
+                      'Recent Activities',
+                      style: Get.textTheme.headline2,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 10,
+                      itemBuilder: (_, index) => const PostItem(),
+                    ),
                   ],
                 ),
               ),

@@ -1,5 +1,4 @@
 import 'package:artist/controllers/app_controller.dart';
-import 'package:artist/screens/signin/setup_account.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:lottie/lottie.dart';

@@ -16,7 +16,8 @@ class TopBar extends StatelessWidget {
             Text('Welcome back!', style: context.textTheme.bodyText2),
             Row(
               children: <Widget>[
-                Text('Helena Angel ', style: context.textTheme.headline2),
+                Text('Helena Angel ',
+                    style: context.textTheme.headline2!.copyWith(fontSize: 22)),
                 Lottie.asset('assets/json/hand.json', width: 30),
               ],
             ),
