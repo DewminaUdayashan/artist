@@ -16,7 +16,7 @@ class _AnimatedBgState extends State<AnimatedBg> with TickerProviderStateMixin {
         options: const ParticleOptions(
           spawnMaxSpeed: 80,
           spawnMinSpeed: 10,
-          baseColor: Colors.deepPurpleAccent,
+          baseColor: Colors.blue,
           spawnMaxRadius: 14,
         ),
       ),

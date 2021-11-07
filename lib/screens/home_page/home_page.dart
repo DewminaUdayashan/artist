@@ -12,62 +12,48 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              SizedBox(
-                height: Get.height,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const TopBar(),
-                    const SizedBox(
-                      height: 90,
-                    ),
-                    TopCarousel(),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      'Recent Activities',
-                      style: Get.textTheme.headline2,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 10,
-                      itemBuilder: (_, index) => const PostItem(),
-                    ),
-                  ],
-                ),
-              ),
-              const Positioned(
-                top: kToolbarHeight * 1.3,
-                left: 0,
-                right: 0,
-                child: SearchBar(),
-              ),
-            ],
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          SizedBox(
+            height: Get.height,
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const CreatePost(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const TopBar(),
+                const SizedBox(
+                  height: 90,
+                ),
+                TopCarousel(),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'Recent Activities',
+                  style: Get.textTheme.headline2,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: 10,
+                  itemBuilder: (_, index) => const PostItem(),
+                ),
+              ],
             ),
-          );
-        },
-        child: const Icon(Icons.add),
+          ),
+          const Positioned(
+            top: kToolbarHeight * 1.3,
+            left: 0,
+            right: 0,
+            child: SearchBar(),
+          ),
+        ],
       ),
     );
   }
