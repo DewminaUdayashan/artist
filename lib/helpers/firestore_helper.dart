@@ -1,3 +1,4 @@
+import 'package:artist/models/post_model.dart';
 import 'package:artist/models/user_model.dart';
 import 'package:artist/shared/instances.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,13 @@ class FirestoreHelper {
       .withConverter<UserModel>(
           fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
           toFirestore: (user, _) => user.toJson());
+  static final CollectionReference posts = FirebaseFirestore.instance
+      .collection('posts')
+      .withConverter<PostModel>(
+          fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+          toFirestore: (post, _) => post.toJson());
+
+// static void
 
   static void registerUser(UserModel user) {
     users.where('email', isEqualTo: user.email).get().then((snapshot) {

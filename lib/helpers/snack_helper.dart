@@ -11,4 +11,14 @@ class SnackHelper {
       snackPosition: SnackPosition.TOP,
     );
   }
+
+  static void alradyVideoAdded() {
+    Get.rawSnackbar(
+      backgroundColor: Colors.amber,
+      icon: const Icon(Icons.warning),
+      title: 'Video already added',
+      message: 'There should be only one video to the your post',
+      snackPosition: SnackPosition.TOP,
+    );
+  }
 }

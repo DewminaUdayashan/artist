@@ -118,7 +118,15 @@ class EditAccountController extends GetxController {
     bioController.text = appController.currentUser.value.bio ?? '';
     mobileController.text = appController.currentUser.value.mobile ?? '';
     dobController.text = appController.currentUser.value.birthdate ?? '';
-    print(appController.currentUser.value.name);
     update();
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    bioController.dispose();
+    mobileController.dispose();
+    dobController.dispose();
+    super.onClose();
   }
 }
