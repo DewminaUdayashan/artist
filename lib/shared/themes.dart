@@ -5,9 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import './colors.dart';
 
 ThemeData lightThemeData = ThemeData.light().copyWith(
-    textTheme: lightTextTheme,
-    primaryColor: primaryColor,
-    iconTheme: const IconThemeData(color: Colors.black54));
+  textTheme: lightTextTheme,
+  primaryColor: primaryColor,
+  iconTheme: const IconThemeData(
+    color: Colors.black54,
+  ),
+  scaffoldBackgroundColor: const Color(0xfff1f1f1),
+);
 
 TextTheme lightTextTheme = ThemeData.light().textTheme.copyWith(
       headline1: ThemeData.light().textTheme.headline1!.merge(

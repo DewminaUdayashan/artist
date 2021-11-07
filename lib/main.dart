@@ -6,7 +6,6 @@ import 'package:artist/screens/profile/edit_account.dart';
 import 'package:artist/screens/signin/signin.dart';
 import 'package:artist/bindings/bindings.dart';
 import 'package:artist/shared/themes.dart';
-import 'package:artist/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'screens/signin/setup_account.dart';
+import 'screens/splash/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

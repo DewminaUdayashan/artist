@@ -20,6 +20,7 @@ class Signin extends GetWidget<AppController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Lottie.asset('assets/json/signin_image.json'),
+            // Image.asset('assets/images/11.gif'),
             Text(
               title,
               style: GoogleFonts.fredokaOne(

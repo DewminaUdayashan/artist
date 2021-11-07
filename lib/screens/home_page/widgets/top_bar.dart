@@ -24,13 +24,23 @@ class TopBar extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.notifications_none_outlined,
-            size: 30,
+        Material(
+          color: Colors.transparent,
+          elevation: 1,
+          borderRadius: BorderRadius.circular(15),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(15),
+            onTap: () {},
+            child: Ink(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+              child: const Icon(Icons.notifications_none_rounded),
+            ),
           ),
-          splashRadius: 20,
         ),
       ],
     );
