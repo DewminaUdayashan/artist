@@ -1,3 +1,4 @@
+import 'package:artist/screens/home_page/widgets/search_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -10,7 +11,7 @@ class SearchBar extends StatelessWidget {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return SizedBox(
-      height: Get.height - 50,
+      height: Get.height - 150,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: FloatingSearchBar(
@@ -41,7 +42,7 @@ class SearchBar extends StatelessWidget {
               ),
             ),
           ],
-          actions: [],
+          actions: const [],
           builder: (context, transition) {
             return ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -50,9 +51,18 @@ class SearchBar extends StatelessWidget {
                 elevation: 4.0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: Colors.accents.map((color) {
-                    return Container(height: 112, color: color);
-                  }).toList(),
+                  children: const [
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                    SearchItem(),
+                  ],
                 ),
               ),
             );

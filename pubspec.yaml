@@ -51,6 +51,7 @@ dependencies:
   image_cropper: ^1.4.1
   firebase_storage: ^10.1.0
   uuid: ^3.0.5
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:
