@@ -1,3 +1,4 @@
+import 'package:artist/screens/create_post/create_post.dart';
 import 'package:artist/screens/home_page/widgets/search_bar.dart';
 import 'package:artist/screens/home_page/widgets/top_bar.dart';
 import 'package:artist/screens/home_page/widgets/top_carousel.dart';
@@ -57,6 +58,16 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const CreatePost(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
