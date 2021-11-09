@@ -21,6 +21,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin cloud_firestore, io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.arthenica.ffmpegkit.flutter.FFmpegKitFlutterPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin ffmpeg_kit_flutter, com.arthenica.ffmpegkit.flutter.FFmpegKitFlutterPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin firebase_auth, io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin", e);
@@ -71,11 +76,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin sqflite, com.tekartik.sqflite.SqflitePlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.example.video_compress.VideoCompressPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin video_compress, com.example.video_compress.VideoCompressPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.videoplayer.VideoPlayerPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin video_player, io.flutter.plugins.videoplayer.VideoPlayerPlugin", e);
@@ -84,6 +84,11 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new xyz.justsoft.video_thumbnail.VideoThumbnailPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin video_thumbnail, xyz.justsoft.video_thumbnail.VideoThumbnailPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new creativemaybeno.wakelock.WakelockPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin wakelock, creativemaybeno.wakelock.WakelockPlugin", e);
     }
   }
 }

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:artist/shared/instances.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import 'firestore_helper.dart';
@@ -29,6 +31,24 @@ class FirebaseStorageHelper {
   }
 
   static Future<void> uploadPost(List<File?> files) async {
+    Get.rawSnackbar(
+      title: 'Posting..',
+      message: 'Your post is being uploading..',
+      backgroundColor: Colors.green[800]!,
+      isDismissible: false,
+      duration: const Duration(days: 1),
+      shouldIconPulse: true,
+      icon: const Icon(
+        Icons.file_upload,
+        color: Colors.white,
+      ),
+      showProgressIndicator: true,
+      progressIndicatorBackgroundColor: Colors.green[800],
+      progressIndicatorValueColor:
+          const AlwaysStoppedAnimation<Color>(Colors.white),
+      snackPosition: SnackPosition.TOP,
+    );
+    String coll = DateTime.now().toString();
     for (File? file in files) {
       firebase_storage.Reference reference = firebase_storage
           .FirebaseStorage.instance
@@ -36,8 +56,8 @@ class FirebaseStorageHelper {
           .child('uploads')
           .child('/posts')
           .child(appController.currentUser.value.id!)
-          .child(DateTime.now().toString())
-          .child(file!.path.split('.').last);
+          .child(coll)
+          .child('${const Uuid().v4()}.${file!.path.split('.').last}');
       firebase_storage.UploadTask task = reference.putFile(file);
       task.snapshotEvents.listen((snapshot) {
         appController.bytesTrassferd.value =
@@ -47,9 +67,13 @@ class FirebaseStorageHelper {
       });
       firebase_storage.TaskSnapshot snapshot =
           await task.whenComplete(() => null);
-      snapshot.ref.getDownloadURL().then((uri) {
-        appController.currentPost.mediaUrls!.add(uri);
-      });
+      String uri = await snapshot.ref.getDownloadURL();
+      appController.currentPost.mediaUrls!.add(uri);
+      print('===============================' + uri);
+    }
+    appController.addPostDetails();
+    if (Get.isSnackbarOpen ?? false) {
+      Get.back();
     }
     print('///////////////////////////////done');
   }

@@ -2,6 +2,7 @@ import 'package:artist/models/post_model.dart';
 import 'package:artist/models/user_model.dart';
 import 'package:artist/shared/instances.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class FirestoreHelper {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -16,7 +17,13 @@ class FirestoreHelper {
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
           toFirestore: (post, _) => post.toJson());
 
-// static void
+  static Future<void> addPost() async {
+    appController.currentPost.userId = appController.currentUser.value.id;
+    appController.currentPost.date = DateTime.now().toString();
+    await posts.add(appController.currentPost);
+    appController.files.clear();
+    appController.currentPost = PostModel();
+  }
 
   static void registerUser(UserModel user) {
     users.where('email', isEqualTo: user.email).get().then((snapshot) {
@@ -61,5 +68,25 @@ class FirestoreHelper {
 
   static Future<QuerySnapshot<Object?>> getAllUsers() async {
     return users.orderBy('joinedDate').get();
+  }
+
+  static Stream<QuerySnapshot<Object?>> getUserPosts(
+    int limit, {
+    QueryDocumentSnapshot? startAfter,
+  }) {
+    Query query = posts.orderBy('date', descending: true).limit(limit);
+    if (startAfter != null) {
+      return query.startAfterDocument(startAfter).snapshots();
+    } else {
+      return query.snapshots();
+    }
+  }
+
+  static Future<void> voteToPost(String postId, List<String> votes) async {
+    posts.doc(postId).update({'votes': votes});
+  }
+
+  static Future<void> unvoteToPost(String postId, List<String> votes) async {
+    posts.doc(postId).update({'votes': votes});
   }
 }
