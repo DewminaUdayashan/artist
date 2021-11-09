@@ -70,23 +70,47 @@ class FirestoreHelper {
     return users.orderBy('joinedDate').get();
   }
 
-  static Stream<QuerySnapshot<Object?>> getUserPosts(
+  static Future<DocumentSnapshot<Object?>> getUser(String id) async {
+    return users.doc(id).get();
+  }
+
+  static Future<QuerySnapshot<Object?>> getUserPosts(
     int limit, {
     QueryDocumentSnapshot? startAfter,
-  }) {
+  }) async {
     Query query = posts.orderBy('date', descending: true).limit(limit);
     if (startAfter != null) {
-      return query.startAfterDocument(startAfter).snapshots();
+      return query.startAfterDocument(startAfter).get();
     } else {
-      return query.snapshots();
+      return query.get();
     }
   }
 
-  static Future<void> voteToPost(String postId, List<String> votes) async {
-    posts.doc(postId).update({'votes': votes});
+  static Future<QuerySnapshot<Object?>> getFeedPosts(
+    int limit, {
+    QueryDocumentSnapshot? startAfter,
+  }) async {
+    Query query = posts.orderBy('date', descending: true).limit(limit);
+    if (startAfter != null) {
+      return query.startAfterDocument(startAfter).get();
+    } else {
+      return query.get();
+    }
   }
 
-  static Future<void> unvoteToPost(String postId, List<String> votes) async {
-    posts.doc(postId).update({'votes': votes});
+  static Future<void> voteToPost(String postId) async {
+    posts.doc(postId).update({
+      'votes': FieldValue.arrayUnion(
+        [appController.currentUser.value.id!],
+      )
+    });
+  }
+
+  static Future<void> unvoteToPost(String postId) async {
+    posts.doc(postId).update(
+      {
+        'votes': FieldValue.arrayRemove([appController.currentUser.value.id!])
+      },
+    );
   }
 }

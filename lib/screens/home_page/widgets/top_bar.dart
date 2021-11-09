@@ -1,3 +1,4 @@
+import 'package:artist/shared/instances.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -16,8 +17,12 @@ class TopBar extends StatelessWidget {
             Text('Welcome back!', style: context.textTheme.bodyText2),
             Row(
               children: <Widget>[
-                Text('Helena Angel ',
-                    style: context.textTheme.headline2!.copyWith(fontSize: 22)),
+                Obx(
+                  () => Text(
+                    appController.currentUser.value.name!,
+                    style: context.textTheme.headline2!.copyWith(fontSize: 22),
+                  ),
+                ),
                 Lottie.asset('assets/json/hand.json', width: 30),
               ],
             ),

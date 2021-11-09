@@ -198,10 +198,15 @@ class _PostItemState extends State<PostItem> {
 }
 
 class UserPostItem extends StatefulWidget {
-  const UserPostItem({Key? key, required this.post, required this.id})
-      : super(key: key);
+  const UserPostItem({
+    Key? key,
+    required this.post,
+    required this.id,
+    this.isCurrentUserPost = true,
+  }) : super(key: key);
   final PostModel post;
   final String id;
+  final bool isCurrentUserPost;
 
   @override
   State<UserPostItem> createState() => _UserPostItemState();
@@ -213,15 +218,25 @@ class _UserPostItemState extends State<UserPostItem> {
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
   late PostModel post;
-  late UserModel user;
+  UserModel? user;
 
   @override
   void initState() {
     super.initState();
     post = widget.post;
-    user = appController.currentUser.value;
+    if (widget.isCurrentUserPost) {
+      user = appController.currentUser.value;
+    } else {
+      getUser();
+    }
     media.addAll(post.mediaUrls ?? []);
     _initializeVideo();
+  }
+
+  Future<void> getUser() async {
+    final snap = await FirestoreHelper.getUser(post.userId!);
+    user = snap.data() as UserModel;
+    setState(() {});
   }
 
   Future<void> _initializeVideo() async {
@@ -255,10 +270,7 @@ class _UserPostItemState extends State<UserPostItem> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.white,
-      ),
+      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -268,17 +280,21 @@ class _UserPostItemState extends State<UserPostItem> {
               const SizedBox(width: 16),
               Row(
                 children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      user.imageUrl!,
-                    ),
-                  ),
+                  user == null
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            user!.imageUrl!,
+                          ),
+                        ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        user.name!,
+                        user == null ? 'loading..' : user!.name!,
                         style: context.textTheme.headline2!.copyWith(
                           color: Colors.black54,
                         ),
@@ -315,7 +331,15 @@ class _UserPostItemState extends State<UserPostItem> {
           if (media.isNotEmpty) ...[
             media.length == 1
                 ? isImage(media.first)
-                    ? Image.network(media[0])
+                    ? Center(
+                        child: OctoImage(
+                          image: NetworkImage(media.first),
+                          alignment: Alignment.center,
+                          placeholderBuilder: (_) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
                     : chewieController != null
                         ? AspectRatio(
                             aspectRatio:
@@ -410,128 +434,37 @@ class _UserPostItemState extends State<UserPostItem> {
                       ),
                     ],
                   ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (post.votes
-                        .contains(appController.currentUser.value.id!)) {
-                    } else {
-                      post.votes.add(appController.currentUser.value.id!);
-                      FirestoreHelper.voteToPost(widget.id, post.votes);
-                    }
-                  },
-                  icon: Icon(
-                    post.votes.contains(appController.currentUser.value.id)
-                        ? CupertinoIcons.heart_fill
-                        : CupertinoIcons.suit_heart,
-                  ),
+          ],
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  if (post.votes
+                      .contains(appController.currentUser.value.id!)) {
+                    print('removing');
+                    FirestoreHelper.unvoteToPost(widget.id);
+                    post.votes.remove(appController.currentUser.value.id!);
+                    setState(() {});
+                  } else {
+                    print('liking');
+                    post.votes.add(appController.currentUser.value.id!);
+                    FirestoreHelper.voteToPost(widget.id);
+                    setState(() {});
+                  }
+                },
+                icon: Icon(
+                  post.votes.contains(appController.currentUser.value.id)
+                      ? CupertinoIcons.heart_fill
+                      : CupertinoIcons.suit_heart,
+                  color: post.votes.contains(appController.currentUser.value.id)
+                      ? Colors.pinkAccent
+                      : Colors.grey,
                 ),
-                const Spacer(),
-              ],
-            ),
-          ]
-          // SizedBox(
-          //   height: Get.height / 2,
-          //   child: Stack(
-          //     children: [
-          //       ClipRRect(
-          //         borderRadius: BorderRadius.circular(15),
-          //         child: PageView.builder(
-          //           itemCount: media.length,
-          //           controller: _pageController,
-          //           itemBuilder: (context, index) {
-          //             return Image.network(
-          //               media[index],
-          //               width: double.infinity,
-          //               height: 200,
-          //               fit: BoxFit.scaleDown,
-          //             );
-          //           },
-          //         ),
-          //       ),
-          //       Positioned(
-          //         bottom: 0,
-          //         left: 0,
-          //         right: 0,
-          //         child: Container(
-          //           width: double.infinity,
-          //           height: 70,
-          //           decoration: BoxDecoration(
-          //             borderRadius: const BorderRadius.only(
-          //                 bottomLeft: Radius.circular(15),
-          //                 bottomRight: Radius.circular(15)),
-          //             gradient: LinearGradient(
-          //               colors: [
-          //                 Colors.black.withOpacity(1),
-          //                 Colors.black.withOpacity(0.4),
-          //               ],
-          //               begin: Alignment.bottomCenter,
-          //               end: Alignment.topCenter,
-          //             ),
-          //           ),
-          //           child: Padding(
-          //             padding: const EdgeInsets.symmetric(horizontal: 20),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: <Widget>[
-          //                 SizedBox(
-          //                   child: Row(
-          //                     children: [
-          //                       const Icon(
-          //                         Icons.favorite_border_outlined,
-          //                         color: Colors.white,
-          //                         size: 25,
-          //                       ),
-          //                       const SizedBox(width: 10),
-          //                       Text(
-          //                         '142',
-          //                         style: context.textTheme.bodyText2!
-          //                             .copyWith(color: Colors.white),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //                 SmoothPageIndicator(
-          //                   controller: _pageController,
-          //                   count: PostItem.imageList.length,
-          //                   effect: ScrollingDotsEffect(
-          //                       activeDotColor: context.theme.primaryColor,
-          //                       activeStrokeWidth: 2.6,
-          //                       activeDotScale: 1.5,
-          //                       maxVisibleDots: 5,
-          //                       radius: 3,
-          //                       spacing: 10,
-          //                       dotHeight: 6,
-          //                       dotWidth: 6,
-          //                       dotColor: Colors.grey[400]!),
-          //                 ),
-          //                 SizedBox(
-          //                   child: Row(
-          //                     crossAxisAlignment: CrossAxisAlignment.center,
-          //                     children: [
-          //                       const Icon(
-          //                         Icons.message_rounded,
-          //                         color: Colors.white,
-          //                         size: 25,
-          //                       ),
-          //                       const SizedBox(width: 10),
-          //                       Text(
-          //                         '21',
-          //                         style: context.textTheme.bodyText2!
-          //                             .copyWith(color: Colors.white),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+              ),
+              Text(post.votes.length.toString()),
+              const Spacer(),
+            ],
+          ),
         ],
       ),
     );
