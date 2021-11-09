@@ -8,20 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
-import 'package:video_compress/video_compress.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class CreatePostController extends GetxController {
-  Subscription? _subscription;
   final ImagePicker _picker = ImagePicker();
   RxDouble compressProgress = 0.0.obs;
   RxBool videoProcessing = false.obs;
   RxList<PickedMedia> pickedFiles = List<PickedMedia>.empty(growable: true).obs;
+  String? description;
 
   Future<void> makePost() async {
-    appController.handlePost(pickedFiles.toList(), 'desc');
+    appController.currentPost.description = description;
+    appController.files.addAll(pickedFiles);
+    Get.back();
+    appController.handlePost();
   }
 
   void addMedia() {
@@ -80,7 +79,11 @@ class CreatePostController extends GetxController {
   }
 
   Future<void> pickImage() async {
-    _picker.pickMultiImage().then((files) {
+    _picker
+        .pickMultiImage(
+      imageQuality: 50,
+    )
+        .then((files) {
       if (files != null) {
         for (XFile file in files) {
           pickedFiles.add(PickedMedia(isVideo: false, file: File(file.path)));
@@ -100,48 +103,21 @@ class CreatePostController extends GetxController {
       _picker
           .pickVideo(
         source: ImageSource.gallery,
-        maxDuration: const Duration(seconds: 30),
       )
           .then((file) async {
         if (file != null) {
-          compressVideo(file.path);
-          update();
+          editVideo(file.path);
         }
       });
       Get.back();
     }
   }
 
-  int videoFileIndex = 0;
-  Future<void> compressVideo(String path) async {
-    compressProgress.value = 0;
-    videoProcessing.value = true;
-    update();
-
-    createThumbnail(path);
-    MediaInfo? mediaInfo = await VideoCompress.compressVideo(
-      path,
-      duration: const Duration(minutes: 1).inSeconds,
-      quality: VideoQuality.MediumQuality,
+  void editVideo(String path) async {
+    pickedFiles.add(PickedMedia(isVideo: true));
+    Get.dialog(
+      VideoEditor(file: File(path)),
     );
-
-    if (mediaInfo != null) {
-      if (mediaInfo.file != null) {
-        pickedFiles[videoFileIndex].file = mediaInfo.file!;
-      }
-    }
-    videoProcessing.value = false;
-    update();
-  }
-
-  Future<void> createThumbnail(String path) async {
-    final thumbnailFile = await VideoCompress.getFileThumbnail(path,
-        quality: 50, // default(100)
-        position: -1 // default(-1)
-        );
-    pickedFiles.add(PickedMedia(isVideo: true, thumb: thumbnailFile));
-    videoFileIndex = pickedFiles.length - 1;
-    update();
   }
 
   Future<void> cropImage(int index) async {
@@ -172,9 +148,9 @@ class CreatePostController extends GetxController {
   }
 
   void removeMedia(int index) {
-    if (pickedFiles[index].isVideo && VideoCompress.isCompressing) {
-      VideoCompress.cancelCompression();
-    }
+    // if (pickedFiles[index].isVideo && VideoCompress.isCompressing) {
+    //   VideoCompress.cancelCompression();
+    // }
     pickedFiles.removeAt(index);
     update();
   }
@@ -182,15 +158,15 @@ class CreatePostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _subscription = VideoCompress.compressProgress$.subscribe((progress) {
-      debugPrint('progress: $progress');
-      compressProgress.value = progress;
-    });
+    // _subscription = VideoCompress.compressProgress$.subscribe((progress) {
+    //   debugPrint('progress: $progress');
+    //   compressProgress.value = progress;
+    // });
   }
 
   @override
   void onClose() {
-    if (_subscription != null) _subscription!.unsubscribe();
+    // if (_subscription != null) _subscription!.unsubscribe();
 
     super.onClose();
   }

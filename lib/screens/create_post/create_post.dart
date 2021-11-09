@@ -42,11 +42,19 @@ class CreatePost extends GetWidget<CreatePostController> {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
+          child: Column(
+            children: [
+              Obx(
+                () => controller.videoProcessing.value
+                    ? const LinearProgressIndicator(
+                        backgroundColor: Colors.white,
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
                   children: [
                     OctoImage(
                       height: 50,
@@ -76,142 +84,138 @@ class CreatePost extends GetWidget<CreatePostController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-                TextFormField(
+              ),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextFormField(
                   decoration: const InputDecoration(
-                    hintText: 'Say something about this photo ...',
+                    hintText: "What's in your mind..",
                     border: InputBorder.none,
                   ),
                   style: context.textTheme.bodyText1,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
+                  onChanged: (value) => controller.description = value,
                 ),
-                const SizedBox(height: 15),
-                GetBuilder<CreatePostController>(
-                    init: CreatePostController(),
-                    builder: (context) {
-                      return ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: controller.pickedFiles.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: Stack(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Image.file(
-                                        controller.pickedFiles[index].isVideo
-                                            ? controller
-                                                .pickedFiles[index].thumb!
-                                            : controller
-                                                .pickedFiles[index].file!,
-                                        fit: BoxFit.fitHeight,
-                                      ),
+              ),
+              const SizedBox(height: 15),
+              GetBuilder<CreatePostController>(
+                  init: CreatePostController(),
+                  builder: (context) {
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.pickedFiles.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Stack(
+                            children: [
+                              Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Image.file(
+                                      controller.pickedFiles[index].isVideo
+                                          ? controller.pickedFiles[index].thumb!
+                                          : controller.pickedFiles[index].file!,
+                                      fit: BoxFit.fitHeight,
                                     ),
-                                    if (controller
-                                        .pickedFiles[index].isVideo) ...[
-                                      Obx(
-                                        () => Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          left: 0,
-                                          bottom: 0,
-                                          child:
-                                              !controller.videoProcessing.value
-                                                  ? const Icon(
-                                                      Icons
-                                                          .play_circle_fill_rounded,
-                                                      color: Colors.black,
-                                                      size: 50,
-                                                    )
-                                                  : Text(
-                                                      'Video processing : ${controller.compressProgress.toStringAsFixed(2)}%',
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                Positioned(
-                                  top: 5,
-                                  left: 5,
-                                  right: 5,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      if (!controller
-                                          .pickedFiles[index].isVideo)
-                                        TextButton(
-                                          onPressed: () =>
-                                              controller.cropImage(index),
-                                          style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                Colors.black.withOpacity(.5),
-                                          ),
-                                          child: Row(
-                                            children: const [
-                                              Icon(
-                                                CupertinoIcons.crop_rotate,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                              SizedBox(width: 6),
-                                              Text(
-                                                'Crop',
-                                                style: TextStyle(
-                                                  color: Colors.white,
+                                  ),
+                                  if (controller
+                                      .pickedFiles[index].isVideo) ...[
+                                    Obx(
+                                      () => Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        left: 0,
+                                        bottom: 0,
+                                        child: !controller.videoProcessing.value
+                                            ? const Icon(
+                                                Icons.play_circle_fill_rounded,
+                                                color: Colors.black,
+                                                size: 50,
+                                              )
+                                            : Text(
+                                                'Video processing : ${controller.compressProgress.toStringAsFixed(2)}%',
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  backgroundColor: Colors.white,
+                                                  fontSize: 18,
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              Positioned(
+                                top: 5,
+                                left: 5,
+                                right: 5,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (!controller.pickedFiles[index].isVideo)
+                                      TextButton(
+                                        onPressed: () =>
+                                            controller.cropImage(index),
+                                        style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.black.withOpacity(.5),
                                         ),
-                                      const Spacer(),
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            controller.removeMedia(index);
-                                          },
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: Ink(
-                                            padding: const EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            child: const Icon(
-                                              Icons.close,
+                                        child: Row(
+                                          children: const [
+                                            Icon(
+                                              CupertinoIcons.crop_rotate,
                                               color: Colors.white,
                                               size: 20,
                                             ),
+                                            SizedBox(width: 6),
+                                            Text(
+                                              'Crop',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    const Spacer(),
+                                    Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          controller.removeMedia(index);
+                                        },
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Ink(
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withOpacity(.5),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 20,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }),
-              ],
-            ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+            ],
           ),
         ),
       ),

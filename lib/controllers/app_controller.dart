@@ -6,6 +6,7 @@ import 'package:artist/helpers/signin_helper.dart';
 import 'package:artist/helpers/storage_helper.dart';
 import 'package:artist/models/post_model.dart';
 import 'package:artist/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,34 @@ class AppController extends GetxController {
 
   UserModel? tempUser;
   Rx<UserModel> currentUser = UserModel().obs;
+
+  int postLimit = 10;
+  bool hasNext = true;
+  RxBool isFetching = false.obs;
+  RxList<QueryDocumentSnapshot<Object?>> userPosts =
+      List<QueryDocumentSnapshot>.empty(growable: true).obs;
+  ScrollController profileScrollController = ScrollController();
+
+  Future fetchNextPost() async {
+    if (isFetching.value) return;
+    isFetching.value = true;
+    try {
+      final snap = FirestoreHelper.getUserPosts(
+        postLimit,
+        startAfter: userPosts.isNotEmpty ? userPosts.last : null,
+      );
+      snap.listen((snapshots) {
+        snapshots.docs.forEach((element) {
+          userPosts.add(element);
+        });
+        if (snapshots.docs.length < postLimit) hasNext = false;
+      });
+      // userPosts.addAll(snap.docs);
+    } catch (e) {
+      print(e);
+    }
+    isFetching.value = false;
+  }
 
   Future<void> signIn() async {
     UserCredential userCredential = await SignInHelper.signInWithGoogle();
@@ -107,15 +136,42 @@ class AppController extends GetxController {
 
   PostModel currentPost = PostModel();
   RxString bytesTrassferd = ''.obs;
-  void handlePost(List<PickedMedia> files, String description) {
+  List<PickedMedia> files = List<PickedMedia>.empty(growable: true);
+
+  void handlePost() {
     FirebaseStorageHelper.uploadPost(files.map((e) => e.file).toList());
     currentPost.date = DateTime.now().toString();
-    currentPost.description = description;
     currentPost.mediaUrls = List<String>.empty(growable: true);
+  }
+
+  Future<void> addPostDetails() async {
+    FirestoreHelper.addPost();
+    userPosts.clear();
+    // fetchNextPost();
+  }
+
+  void profileScrollListner() {
+    if (profileScrollController.offset >=
+            profileScrollController.position.maxScrollExtent &&
+        !profileScrollController.position.outOfRange) {
+      print('on bottom');
+      print(hasNext);
+      if (hasNext) {
+        fetchNextPost();
+      }
+    }
   }
 
   @override
   void onInit() {
     super.onInit();
+    profileScrollController.addListener(profileScrollListner);
+    fetchNextPost();
+  }
+
+  @override
+  void onClose() {
+    profileScrollController.dispose();
+    super.onClose();
   }
 }

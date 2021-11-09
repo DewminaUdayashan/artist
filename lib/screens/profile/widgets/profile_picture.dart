@@ -1,5 +1,6 @@
 import 'package:artist/controllers/app_controller.dart';
 import 'package:artist/models/user_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
@@ -30,15 +31,16 @@ class ProfilePicture extends GetWidget<AppController> {
           child: GetBuilder<AppController>(
               init: AppController(),
               builder: (context) {
-                return OctoImage(
-                  image: NetworkImage(user != null
+                return CachedNetworkImage(
+                  imageUrl: user != null
                       ? user!.imageUrl!
-                      : controller.currentUser.value.imageUrl!),
-                  placeholderBuilder: (context) => const Center(
+                      : controller.currentUser.value.imageUrl!,
+                  placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Text('Unable to load'), //TODO
+                  errorWidget: (context, url, error) => const Center(
+                    child: Text('something\nwent\wrong'),
+                  ),
                   fit: BoxFit.cover,
                 );
               }),
