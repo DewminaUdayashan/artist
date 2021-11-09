@@ -1,7 +1,9 @@
+import 'package:artist/models/post_model.dart';
 import 'package:artist/screens/create_post/create_post.dart';
 import 'package:artist/screens/home_page/widgets/search_bar.dart';
 import 'package:artist/screens/home_page/widgets/top_bar.dart';
 import 'package:artist/screens/home_page/widgets/top_carousel.dart';
+import 'package:artist/shared/instances.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,34 +20,59 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: Get.height,
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const TopBar(),
-                const SizedBox(
-                  height: 90,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const TopBar(),
+                    const SizedBox(
+                      height: 90,
+                    ),
+                    TopCarousel(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Text(
+                      'Recent Activities',
+                      style: Get.textTheme.headline2,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
-                TopCarousel(),
-                const SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  'Recent Activities',
-                  style: Get.textTheme.headline2,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ListView.builder(
+              ),
+              Obx(
+                () => ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 10,
-                  itemBuilder: (_, index) => const PostItem(),
+                  itemCount: appController.feedPosts.length,
+                  itemBuilder: (context, index) {
+                    final post =
+                        appController.feedPosts[index].data() as PostModel;
+                    final postId = appController.feedPosts[index].id;
+                    return UserPostItem(
+                      post: post,
+                      id: postId,
+                      isCurrentUserPost: false,
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const Divider(thickness: 10),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              Obx(
+                () => appController.isCurrentUserPostFetcing.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
           ),
           const Positioned(
             top: kToolbarHeight * 1.3,

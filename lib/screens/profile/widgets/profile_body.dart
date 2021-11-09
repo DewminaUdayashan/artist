@@ -42,11 +42,11 @@ class ProfileBody extends StatelessWidget {
                   () => ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: appController.userPosts.length,
+                    itemCount: appController.currentUserPosts.length,
                     itemBuilder: (context, index) {
-                      final post =
-                          appController.userPosts[index].data() as PostModel;
-                      final postId = appController.userPosts[index].id;
+                      final post = appController.currentUserPosts[index].data()
+                          as PostModel;
+                      final postId = appController.currentUserPosts[index].id;
                       return UserPostItem(post: post, id: postId);
                     },
                     separatorBuilder: (context, index) =>
@@ -55,7 +55,7 @@ class ProfileBody extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Obx(
-                  () => appController.isFetching.value
+                  () => appController.isCurrentUserPostFetcing.value
                       ? const Center(
                           child: CircularProgressIndicator(),
                         )

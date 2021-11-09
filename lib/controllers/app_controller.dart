@@ -21,31 +21,54 @@ class AppController extends GetxController {
   Rx<UserModel> currentUser = UserModel().obs;
 
   int postLimit = 10;
-  bool hasNext = true;
-  RxBool isFetching = false.obs;
-  RxList<QueryDocumentSnapshot<Object?>> userPosts =
+  bool hasNextCurrentUserPost = true;
+  bool hasNextFeedPost = true;
+  RxBool isCurrentUserPostFetcing = false.obs;
+  RxBool isFeedPostFetching = false.obs;
+  RxList<QueryDocumentSnapshot<Object?>> currentUserPosts =
+      List<QueryDocumentSnapshot>.empty(growable: true).obs;
+  RxList<QueryDocumentSnapshot<Object?>> feedPosts =
       List<QueryDocumentSnapshot>.empty(growable: true).obs;
   ScrollController profileScrollController = ScrollController();
+  ScrollController feedScrollController = ScrollController();
 
-  Future fetchNextPost() async {
-    if (isFetching.value) return;
-    isFetching.value = true;
+  Future<void> fetchNextCurrentUserPost() async {
+    if (isCurrentUserPostFetcing.value) return;
+    isCurrentUserPostFetcing.value = true;
     try {
-      final snap = FirestoreHelper.getUserPosts(
+      final snap = await FirestoreHelper.getUserPosts(
         postLimit,
-        startAfter: userPosts.isNotEmpty ? userPosts.last : null,
+        startAfter: currentUserPosts.isNotEmpty ? currentUserPosts.last : null,
       );
-      snap.listen((snapshots) {
-        snapshots.docs.forEach((element) {
-          userPosts.add(element);
-        });
-        if (snapshots.docs.length < postLimit) hasNext = false;
-      });
-      // userPosts.addAll(snap.docs);
+
+      for (var doc in snap.docs) {
+        currentUserPosts.add(doc);
+      }
+
+      if (snap.docs.length < postLimit) hasNextCurrentUserPost = false;
+      // currentUserPosts.addAll(snap.docs);
     } catch (e) {
       print(e);
     }
-    isFetching.value = false;
+    isCurrentUserPostFetcing.value = false;
+  }
+
+  Future<void> fetchNextFeedPosts() async {
+    if (isFeedPostFetching.value) return;
+    isFeedPostFetching.value = true;
+    try {
+      final snap = await FirestoreHelper.getFeedPosts(
+        postLimit,
+        startAfter: feedPosts.isNotEmpty ? feedPosts.last : null,
+      );
+      for (var doc in snap.docs) {
+        feedPosts.add(doc);
+      }
+      if (snap.docs.length < postLimit) hasNextFeedPost = false;
+    } catch (e) {
+      print(e);
+    }
+    isFeedPostFetching.value = false;
   }
 
   Future<void> signIn() async {
@@ -85,7 +108,6 @@ class AppController extends GetxController {
   }
 
   void openAppSettings() {
-    print('tapped');
     showCupertinoModalPopup(
       context: Get.context!,
       builder: (context) => CupertinoActionSheet(
@@ -119,11 +141,8 @@ class AppController extends GetxController {
 
   void handleSignIn() async {
     if (!StorageHelper.isFirstTime()) {
-      print('not first Time');
       await signIn();
     } else {
-      print(' first Time');
-
       Get.offAllNamed('/signIn');
     }
   }
@@ -146,8 +165,8 @@ class AppController extends GetxController {
 
   Future<void> addPostDetails() async {
     FirestoreHelper.addPost();
-    userPosts.clear();
-    // fetchNextPost();
+    currentUserPosts.clear();
+    fetchNextCurrentUserPost();
   }
 
   void profileScrollListner() {
@@ -155,9 +174,21 @@ class AppController extends GetxController {
             profileScrollController.position.maxScrollExtent &&
         !profileScrollController.position.outOfRange) {
       print('on bottom');
-      print(hasNext);
-      if (hasNext) {
-        fetchNextPost();
+      print(hasNextCurrentUserPost);
+      if (hasNextCurrentUserPost) {
+        fetchNextCurrentUserPost();
+      }
+    }
+  }
+
+  void feedScrollListner() {
+    if (feedScrollController.offset >=
+            feedScrollController.position.maxScrollExtent &&
+        !feedScrollController.position.outOfRange) {
+      print('on bottom');
+      print(hasNextFeedPost);
+      if (hasNextFeedPost) {
+        fetchNextFeedPosts();
       }
     }
   }
@@ -165,13 +196,19 @@ class AppController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    feedScrollController.addListener(feedScrollListner);
     profileScrollController.addListener(profileScrollListner);
-    fetchNextPost();
+    fetchNextFeedPosts();
+    fetchNextCurrentUserPost();
   }
 
   @override
   void onClose() {
+    feedScrollController.removeListener(feedScrollListner);
+    feedScrollController.dispose();
+    profileScrollController.removeListener(profileScrollListner);
     profileScrollController.dispose();
+
     super.onClose();
   }
 }
