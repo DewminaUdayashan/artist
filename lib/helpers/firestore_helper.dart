@@ -9,8 +9,8 @@ class FirestoreHelper {
   static final CollectionReference users = FirebaseFirestore.instance
       .collection('users')
       .withConverter<UserModel>(
-          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
-          toFirestore: (user, _) => user.toJson());
+          fromFirestore: (snapshot, _) => UserModel.fromMap(snapshot.data()!),
+          toFirestore: (user, _) => user.toMap());
   static final CollectionReference posts = FirebaseFirestore.instance
       .collection('posts')
       .withConverter<PostModel>(

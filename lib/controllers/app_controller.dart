@@ -1,19 +1,27 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:artist/api/api_provider.dart';
 import 'package:artist/helpers/firebase_storage_helper.dart';
 import 'package:artist/helpers/firestore_helper.dart';
 import 'package:artist/helpers/signin_helper.dart';
 import 'package:artist/helpers/storage_helper.dart';
 import 'package:artist/models/post_model.dart';
 import 'package:artist/models/user_model.dart';
+import 'package:artist/shared/instances.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
+import 'package:socket_io_client/socket_io_client.dart';
 import 'create_post_controller.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AppController extends GetxController {
+  String loginEmail = '';
+  String loginPw = '';
+  String sessionToken = '';
+  final ApiProvider api = ApiProvider();
   final PageController pageController = PageController();
   RxInt selectedPage = 0.obs;
 
@@ -72,24 +80,36 @@ class AppController extends GetxController {
   }
 
   Future<void> signIn() async {
-    UserCredential userCredential = await SignInHelper.signInWithGoogle();
-    if (userCredential.user != null) {
-      currentUser.value.email = userCredential.user!.email;
-      currentUser.value.name = userCredential.user!.displayName;
-      currentUser.value.imageUrl = userCredential.user!.photoURL;
-      currentUser.value.mainPurpose = '1';
-      currentUser.value.joinedDate = DateTime.now().toString();
-      print(currentUser.toString());
-      if (StorageHelper.isFirstTime()) {
-        Get.offAllNamed('/setup');
-      } else {
-        FirestoreHelper.registerUser(currentUser.value);
-        Get.offAllNamed('/home');
-      }
-    } else {
-      //TODO:
-    }
+    // SignInHelper.signInWithGoogle();
+    print('===========================');
+    SignInHelper.signInwithPassword();
+    // // try {
+
+    //   UserCredential userCredential = await SignInHelper.signInWithGoogle();
+    //   if (userCredential.user != null) {
+    //     currentUser.value.email = userCredential.user!.email;
+    //     currentUser.value.name = userCredential.user!.displayName;
+    //     currentUser.value.imageUrl = userCredential.user!.photoURL;
+    //     currentUser.value.mainPurpose = '0';
+    //     currentUser.value.joinedDate = DateTime.now().toString();
+    //     if (StorageHelper.isFirstTime()) {
+    //       Get.offAllNamed('/setup');
+    //     } else {
+    //       markAppOpened();
+    //     }
+    //   } else {
+    //     //TODO:
+    //   }
+    // } catch (e) {
+    //   //TODO:
+    // }
   }
+
+  void checkEmail() {
+    SignInHelper.checkEmail();
+  }
+
+  Future<void> continueWithGoogle() async {}
 
   void onTabTapped(int page) {
     selectedPage.value = page;
@@ -148,9 +168,8 @@ class AppController extends GetxController {
   }
 
   void markAppOpened() {
-    StorageHelper.markFirstTime();
-    FirestoreHelper.registerUser(currentUser.value);
-    Get.offAllNamed('/home');
+    // FirestoreHelper.registerUser(currentUser.value);
+    api.registerUser(appController.currentUser.value);
   }
 
   PostModel currentPost = PostModel();
@@ -212,3 +231,37 @@ class AppController extends GetxController {
     super.onClose();
   }
 }
+
+
+    // IO.Socket socket = IO.io(
+    //   'ws://192.168.34.2:5000',
+    //   OptionBuilder()
+    //       .setTransports(['websocket']) // for Flutter or Dart VM
+    //       .disableAutoConnect()
+    //       .build(),
+    // );
+    // socket.onConnect((_) {
+    //   print('connect');
+    //   socket.emit('msg', 'test');
+    // });
+    // socket.on('event', (data) => print(data));
+    // socket.onDisconnect((_) => print('disconnect'));
+    // socket.on('fromServer', (_) => print(_));
+    // socket.onConnect((data) => print('data'));
+    // socket.onError((data) => print(data));
+    // socket.onConnectError((data) => print(data));
+
+    // socket.on('connect_error', (data) => print(data));
+    // socket.on('connect_timeout', (data) => print(data));
+    // socket.on('connecting', (data) => print(data));
+    // socket.on('disconnect', (data) => print(data));
+    // socket.on('error', (data) => print(data));
+    // socket.on('reconnect', (data) => print(data));
+    // socket.on('reconnect_attempt', (data) => print(data));
+    // socket.on('reconnect_failed', (_) => print(_));
+    // socket.on('reconnect_error', (_) => print(_));
+
+    // socket.on('reconnecting', (_) => print(_));
+    // socket.on('ping', (_) => print(_));
+    // socket.on('pong', (_) => print(_));
+    // socket.connect();

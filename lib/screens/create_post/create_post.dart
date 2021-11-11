@@ -60,7 +60,7 @@ class CreatePost extends GetWidget<CreatePostController> {
                       height: 50,
                       width: 50,
                       image: NetworkImage(
-                        appController.currentUser.value.imageUrl!,
+                        appController.currentUser.value.imageUrl ?? '',
                       ),
                       errorBuilder: (context, error, stackTrace) {
                         return const Center(

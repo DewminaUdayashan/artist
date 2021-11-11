@@ -70,9 +70,7 @@ class _SetupAccountState extends State<SetupAccount> {
                     duration: const Duration(milliseconds: 1500),
                     child: GestureDetector(
                       onTap: () {
-                        if (appController.currentUser != null) {
-                          appController.currentUser.value.mainPurpose = '1';
-                        }
+                        appController.currentUser.value.mainPurpose = 0;
                         setState(() {
                           selectedChoise = 'find';
                         });
@@ -91,9 +89,7 @@ class _SetupAccountState extends State<SetupAccount> {
                     duration: const Duration(milliseconds: 1500),
                     child: GestureDetector(
                       onTap: () {
-                        if (appController.currentUser != null) {
-                          appController.currentUser.value.mainPurpose = '2';
-                        }
+                        appController.currentUser.value.mainPurpose = 1;
                         setState(() {
                           selectedChoise = 'new';
                         });
@@ -101,7 +97,7 @@ class _SetupAccountState extends State<SetupAccount> {
                       child: PurposeItem(
                         isChecked: selectedChoise == 'new' ? true : false,
                         icon: Icons.person,
-                        title: 'New employee',
+                        title: 'Find new employee',
                         description:
                             "It's easy to find your employees here with us",
                       ),
@@ -131,7 +127,7 @@ class _SetupAccountState extends State<SetupAccount> {
                       ),
                       child: const Center(
                         child: Text(
-                          'Confirm',
+                          'Register',
                           style: TextStyle(
                             fontSize: 17,
                             color: Colors.white,

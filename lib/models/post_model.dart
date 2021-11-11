@@ -5,7 +5,6 @@ class PostModel {
   String? userId;
   String? description;
   List<String>? mediaUrls;
-  bool isCloudStorage;
   String? date;
   List<String> votes;
 
@@ -14,7 +13,6 @@ class PostModel {
     this.userId,
     this.description,
     this.mediaUrls,
-    this.isCloudStorage = true,
     this.date,
     this.votes = const <String>[],
   });
@@ -22,24 +20,22 @@ class PostModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userId': userId,
+      'user_id': userId,
       'description': description,
-      'mediaUrls': mediaUrls,
-      'isCloudStorage': isCloudStorage,
-      'date': date,
+      'media_urls': mediaUrls,
+      'created_at': date,
       'votes': votes,
     };
   }
 
   factory PostModel.fromJson(Map<String, dynamic> map) {
     return PostModel(
-      id: map['id'] != null ? map['id'] : null,
-      userId: map['userId'] != null ? map['userId'] : null,
-      description: map['description'] != null ? map['description'] : null,
+      id: map['id'],
+      userId: map['user_id'],
+      description: map['description'],
       mediaUrls:
           map['mediaUrls'] == null ? null : List<String>.from(map['mediaUrls']),
-      isCloudStorage: map['isCloudStorage'] ?? null,
-      date: map['date'] ?? null,
+      date: map['created_at'],
       votes: map['votes'] == null ? [] : List<String>.from(map['votes']),
     );
   }

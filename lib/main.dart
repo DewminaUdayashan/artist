@@ -5,8 +5,10 @@ import 'package:artist/bindings/edit_account_bindings.dart';
 import 'package:artist/screens/create_post/create_post.dart';
 import 'package:artist/screens/home/home.dart';
 import 'package:artist/screens/profile/edit_account.dart';
+import 'package:artist/screens/signin/register.dart';
 import 'package:artist/screens/signin/signin.dart';
 import 'package:artist/bindings/bindings.dart';
+import 'package:artist/screens/signin/widgets/verification.dart';
 import 'package:artist/screens/splash/splash.dart';
 import 'package:artist/shared/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -56,6 +58,14 @@ class MyApp extends StatelessWidget {
           page: () => const CreatePost(),
           transition: Transition.cupertinoDialog,
           binding: CreatePostBinding(),
+        ),
+        GetPage(
+          name: '/register',
+          page: () => const Register(),
+        ),
+        GetPage(
+          name: '/verification',
+          page: () => const Verification(),
         ),
       ],
       theme: lightThemeData,
