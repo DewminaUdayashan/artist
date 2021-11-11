@@ -25,7 +25,7 @@ class SearchItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: user == null
                 ? Image.asset(
-                    'assets/images/user.jpg',
+                    'assets/images/members/user.jpg',
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,

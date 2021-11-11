@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TitleBar extends StatelessWidget {
-  const TitleBar({Key? key}) : super(key: key);
+  TitleBar({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+  String title;
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +16,10 @@ class TitleBar extends StatelessWidget {
       right: 0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
-            'Categories',
-            style: TextStyle(
+            title,
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
