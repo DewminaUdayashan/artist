@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lk.youth.artist">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
         android:label="artist"
         android:icon="@mipmap/ic_launcher"

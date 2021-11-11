@@ -44,6 +44,13 @@ TextTheme lightTextTheme = ThemeData.light().textTheme.copyWith(
               fontWeight: FontWeight.normal,
             ),
           ),
+      headline5: ThemeData.light().textTheme.headline4!.merge(
+            GoogleFonts.ubuntu(
+              color: Colors.black.withOpacity(.8),
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
       bodyText1: ThemeData.light().textTheme.bodyText1!.merge(
             GoogleFonts.aBeeZee(
               color: Colors.black54,

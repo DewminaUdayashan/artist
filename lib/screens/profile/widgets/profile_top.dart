@@ -54,7 +54,7 @@ class ProfileTop extends GetWidget<AppController> {
                 isRepeatingAnimation: true,
                 displayFullTextOnTap: true,
                 animatedTexts: [
-                  if (appController.currentUser.value.categoriesId == null) ...[
+                  if (appController.currentUser.value.categorieIds == null) ...[
                     TypewriterAnimatedText(
                       'No details to show',
                       speed: const Duration(milliseconds: 100),
