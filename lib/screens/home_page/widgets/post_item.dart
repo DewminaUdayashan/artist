@@ -20,11 +20,11 @@ class PostItem extends StatefulWidget {
   const PostItem({Key? key}) : super(key: key);
 
   static final imageList = [
-    'assets/images/image_1.jpg',
-    'assets/images/image_2.jpg',
-    'assets/images/image_3.jpg',
-    'assets/images/image_4.jpg',
-    'assets/images/image_5.jpg',
+    'assets/images/posts/image_1.jpg',
+    'assets/images/posts/image_2.jpg',
+    'assets/images/posts/image_3.jpg',
+    'assets/images/posts/image_4.jpg',
+    'assets/images/posts/image_5.jpg',
   ];
 
   @override
@@ -58,7 +58,8 @@ class _PostItemState extends State<PostItem> {
                 child: Row(
                   children: <Widget>[
                     const CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/user.jpg'),
+                      backgroundImage:
+                          AssetImage('assets/images/members/user.jpg'),
                     ),
                     const SizedBox(width: 10),
                     Column(

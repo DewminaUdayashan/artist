@@ -90,6 +90,11 @@ flutter:
     - assets/json/
     - assets/images/
     - assets/images/icons/
+    - assets/images/posts/
+    - assets/images/background/
+    - assets/images/categories/
+    - assets/images/icons/
+    - assets/images/members/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

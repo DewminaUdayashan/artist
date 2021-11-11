@@ -9,12 +9,24 @@ class MainCategories extends StatelessWidget {
   const MainCategories({Key? key}) : super(key: key);
 
   static final categoryList = [
-    {'title': 'Handicraft', 'image': 'assets/images/category_1.jpg'},
-    {'title': 'Art', 'image': 'assets/images/category_3.jpg'},
-    {'title': 'Food', 'image': 'assets/images/category_4.jpg'},
-    {'title': 'Hospitality', 'image': 'assets/images/category_2.jpg'},
-    {'title': 'Architecture', 'image': 'assets/images/category_5.jpg'},
-    {'title': 'Photography', 'image': 'assets/images/category_6.jpg'},
+    {'title': 'Handicraft', 'image': 'assets/images/categories/category_1.jpg'},
+    {'title': 'Art', 'image': 'assets/images/categories/category_3.jpg'},
+    {'title': 'Food', 'image': 'assets/images/categories/category_4.jpg'},
+    {
+      'title': 'Hospitality',
+      'image': 'assets/images/categories/category_2.jpg'
+    },
+    {
+      'title': 'Architecture',
+      'image': 'assets/images/categories/category_5.jpg'
+    },
+    {
+      'title': 'Photography',
+      'image': 'assets/images/categories/category_6.png'
+    },
+    {'title': 'Music', 'image': 'assets/images/categories/category_7.png'},
+    {'title': 'Drama', 'image': 'assets/images/categories/category_8.png'},
+    {'title': 'Dancing', 'image': 'assets/images/categories/category_9.png'},
   ];
 
   @override
@@ -49,17 +61,22 @@ class MainCategories extends StatelessWidget {
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 15,
                 crossAxisCount: 2,
-                children: List.generate(categoryList.length, (index) {
-                  return MainCategoryItem(
-                    details: categoryList[index],
-                  );
-                }),
+                children: List.generate(
+                  categoryList.length,
+                  (index) {
+                    return MainCategoryItem(
+                      details: categoryList[index],
+                    );
+                  },
+                ),
               ),
             ),
           ),
         ),
         const SearchBox(),
-        const TitleBar(),
+        TitleBar(
+          title: 'Categories',
+        ),
       ],
     );
   }

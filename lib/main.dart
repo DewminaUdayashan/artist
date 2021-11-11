@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       theme: lightThemeData,
-      initialRoute: '/splash',
+      initialRoute: '/signIn',
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:artist/screens/categories/sub_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,13 @@ class MainCategoryItem extends StatelessWidget {
       elevation: 5,
       borderRadius: BorderRadius.circular(15),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const SubCategories(),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(15),
         child: Ink(
           child: Stack(
